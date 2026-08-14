@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_8872a7e2a208a27a0f1288d420373915 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+<div style="position: fixed; top: 10px; left: 50px; z-index: 9999; background: white; padding: 10px; border-radius: 5px; border: 1px solid #ccc; max-height: 400px; overflow-y: auto;">
+    <label for="flyto" style="font-weight: bold; font-family: Arial; font-size: 13px;">Fly to Location: </label>
+    <select id="flyto" onchange="window.map_instance.flyTo(this.value.split(','), this.options[this.selectedIndex].getAttribute('data-zoom'));" style="padding: 5px; font-family: Arial;">
+        <option value="25,15" data-zoom="2.5">Global View</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Islands ---</option>
+        <option value="0.9619,114.5548" data-zoom="5">Borneo</option>
+        <option value="21.5218,-77.7812" data-zoom="5">Cuba</option>
+        <option value="72.0,-40.0" data-zoom="3.5">Greenland</option>
+        <option value="64.9631,-19.0208" data-zoom="5">Iceland</option>
+        <option value="-18.7669,46.8691" data-zoom="5">Madagascar</option>
+        <option value="7.8731,80.7718" data-zoom="5">Sri Lanka</option>
+        <option value="-42.0409,146.8087" data-zoom="5">Tasmania</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Isthmuss ---</option>
+        <option value="37.9131,22.9936" data-zoom="5">Corinth Isthmus</option>
+        <option value="10.4,98.8" data-zoom="5">Isthmus of Kra</option>
+        <option value="8.538,-80.7821" data-zoom="5">Isthmus of Panama</option>
+        <option value="29.974,32.5263" data-zoom="5">Isthmus of Suez</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Peninsulas ---</option>
+        <option value="23.8859,45.0792" data-zoom="3.5">Arabian Peninsula</option>
+        <option value="27.6648,-81.5158" data-zoom="5">Florida</option>
+        <option value="40.4637,-3.7492" data-zoom="5">Iberian Peninsula</option>
+        <option value="20.5937,78.9629" data-zoom="3.5">India</option>
+        <option value="41.8719,12.5674" data-zoom="5">Italy</option>
+        <option value="36.5568,127.9908" data-zoom="5">Korean Peninsula</option>
+
+    </select>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var maps = Object.keys(window).filter(k => k.startsWith('map_'));
+        if(maps.length > 0) { window.map_instance = window[maps]; }
+    });
+</script>
+    
+            <div class="folium-map" id="map_8872a7e2a208a27a0f1288d420373915" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_8872a7e2a208a27a0f1288d420373915 = L.map(
+                "map_8872a7e2a208a27a0f1288d420373915",
+                {
+                    center: [25.0, 15.0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 2.5,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b1f89b8c21fa110cc36238c6f052d572 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors", "detectRetina": false, "maxNativeZoom": 19, "maxZoom": 19, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_b1f89b8c21fa110cc36238c6f052d572.addTo(map_8872a7e2a208a27a0f1288d420373915);
+        
+    
+            var feature_group_e946e5e6de7fd5727ffbd577c283dec3 = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_fd513a4290eab8d790169d2062454668 = L.marker(
+                [-18.7669, 46.8691],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_ef7de2743a2a2f8fed4376927fa787ba = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_fd513a4290eab8d790169d2062454668.setIcon(icon_ef7de2743a2a2f8fed4376927fa787ba);
+        
+    
+        var popup_a022338e64d9d2b80658df5b1650b8fa = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_92421f6b6146bbfe66b0de4d2d458a92 = $(`<div id="html_92421f6b6146bbfe66b0de4d2d458a92" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Madagascar</h3><p><b>Island</b>: Completely surrounded by water off southeast Africa.</p></div></div>`)[0];
+                popup_a022338e64d9d2b80658df5b1650b8fa.setContent(html_92421f6b6146bbfe66b0de4d2d458a92);
+            
+        
+
+        marker_fd513a4290eab8d790169d2062454668.bindPopup(popup_a022338e64d9d2b80658df5b1650b8fa)
+        ;
+
+        
+    
+    
+            marker_fd513a4290eab8d790169d2062454668.bindTooltip(
+                `<div>
+                     Madagascar
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_20dd4683ab6c6a16969f8bf070cab327 = L.marker(
+                [64.9631, -19.0208],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_d6d48bb33023cd31581d4e43e9e573db = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_20dd4683ab6c6a16969f8bf070cab327.setIcon(icon_d6d48bb33023cd31581d4e43e9e573db);
+        
+    
+        var popup_d4433f6ef378bb43c368a65547d4bbe4 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_4e73a2f524b9512b03f357a732d9859b = $(`<div id="html_4e73a2f524b9512b03f357a732d9859b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Iceland</h3><p><b>Island</b>: Isolated volcanic island in the North Atlantic.</p></div></div>`)[0];
+                popup_d4433f6ef378bb43c368a65547d4bbe4.setContent(html_4e73a2f524b9512b03f357a732d9859b);
+            
+        
+
+        marker_20dd4683ab6c6a16969f8bf070cab327.bindPopup(popup_d4433f6ef378bb43c368a65547d4bbe4)
+        ;
+
+        
+    
+    
+            marker_20dd4683ab6c6a16969f8bf070cab327.bindTooltip(
+                `<div>
+                     Iceland
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_dbe625f2fd59969f50cae0c26cec15f4 = L.marker(
+                [21.5218, -77.7812],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_502b5c956085ddece5712e7a53e66ef9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_dbe625f2fd59969f50cae0c26cec15f4.setIcon(icon_502b5c956085ddece5712e7a53e66ef9);
+        
+    
+        var popup_eafea41b1e37f4e0445fc0cfbbca5f03 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ea307533c35eea5b389bb639ccdd88ca = $(`<div id="html_ea307533c35eea5b389bb639ccdd88ca" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Cuba</h3><p><b>Island</b>: Largest island landmass in the Caribbean Sea.</p></div></div>`)[0];
+                popup_eafea41b1e37f4e0445fc0cfbbca5f03.setContent(html_ea307533c35eea5b389bb639ccdd88ca);
+            
+        
+
+        marker_dbe625f2fd59969f50cae0c26cec15f4.bindPopup(popup_eafea41b1e37f4e0445fc0cfbbca5f03)
+        ;
+
+        
+    
+    
+            marker_dbe625f2fd59969f50cae0c26cec15f4.bindTooltip(
+                `<div>
+                     Cuba
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a0569ebcfc19f06dc30978b7874536ef = L.marker(
+                [72.0, -40.0],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_9416594dbed4b935154efa5bb2a4b4c4 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_a0569ebcfc19f06dc30978b7874536ef.setIcon(icon_9416594dbed4b935154efa5bb2a4b4c4);
+        
+    
+        var popup_3df6b598c9debd8b32855b319368c0af = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_e5587061d04d928124030756fcfe367e = $(`<div id="html_e5587061d04d928124030756fcfe367e" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Greenland</h3><p><b>Island</b>: The world's largest island, dominated by ice sheets.</p></div></div>`)[0];
+                popup_3df6b598c9debd8b32855b319368c0af.setContent(html_e5587061d04d928124030756fcfe367e);
+            
+        
+
+        marker_a0569ebcfc19f06dc30978b7874536ef.bindPopup(popup_3df6b598c9debd8b32855b319368c0af)
+        ;
+
+        
+    
+    
+            marker_a0569ebcfc19f06dc30978b7874536ef.bindTooltip(
+                `<div>
+                     Greenland
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2bec37453347c1287bfae3a01c221787 = L.marker(
+                [0.9619, 114.5548],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_e4cf5ae1f9e704dcc137cca3316030a1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_2bec37453347c1287bfae3a01c221787.setIcon(icon_e4cf5ae1f9e704dcc137cca3316030a1);
+        
+    
+        var popup_9aa8211e724ab5e825159eadf7156c03 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_ea6071531cf08697c7e911c9cae97c25 = $(`<div id="html_ea6071531cf08697c7e911c9cae97c25" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Borneo</h3><p><b>Island</b>: Massive island in Southeast Asia, split between three nations.</p></div></div>`)[0];
+                popup_9aa8211e724ab5e825159eadf7156c03.setContent(html_ea6071531cf08697c7e911c9cae97c25);
+            
+        
+
+        marker_2bec37453347c1287bfae3a01c221787.bindPopup(popup_9aa8211e724ab5e825159eadf7156c03)
+        ;
+
+        
+    
+    
+            marker_2bec37453347c1287bfae3a01c221787.bindTooltip(
+                `<div>
+                     Borneo
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6fe63a94ceab2ef97bf8efb6c00b54db = L.marker(
+                [-42.0409, 146.8087],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_1251e4d77d1651140fac271684ab6750 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_6fe63a94ceab2ef97bf8efb6c00b54db.setIcon(icon_1251e4d77d1651140fac271684ab6750);
+        
+    
+        var popup_3f9a9540c2a831da8cfc79b6cf10fe5b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_05b6e266c5bc13fd62d7da1b56311aad = $(`<div id="html_05b6e266c5bc13fd62d7da1b56311aad" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Tasmania</h3><p><b>Island</b>: Island state located off the southeastern coast of mainland Australia.</p></div></div>`)[0];
+                popup_3f9a9540c2a831da8cfc79b6cf10fe5b.setContent(html_05b6e266c5bc13fd62d7da1b56311aad);
+            
+        
+
+        marker_6fe63a94ceab2ef97bf8efb6c00b54db.bindPopup(popup_3f9a9540c2a831da8cfc79b6cf10fe5b)
+        ;
+
+        
+    
+    
+            marker_6fe63a94ceab2ef97bf8efb6c00b54db.bindTooltip(
+                `<div>
+                     Tasmania
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3997a42eb3481839f9d164f539e397bf = L.marker(
+                [7.8731, 80.7718],
+                {}
+            ).addTo(feature_group_e946e5e6de7fd5727ffbd577c283dec3);
+        
+    
+            var icon_2b5ac19741d692d2f47ffd5144241da7 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "red", "prefix": "glyphicon"}
+            );
+            marker_3997a42eb3481839f9d164f539e397bf.setIcon(icon_2b5ac19741d692d2f47ffd5144241da7);
+        
+    
+        var popup_1555968714ef36fd1b93c9ea4885d22d = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_91c9782b061794b317c9a3cadca0a10b = $(`<div id="html_91c9782b061794b317c9a3cadca0a10b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Sri Lanka</h3><p><b>Island</b>: Tear-drop shaped island nation just south of the Indian subcontinent.</p></div></div>`)[0];
+                popup_1555968714ef36fd1b93c9ea4885d22d.setContent(html_91c9782b061794b317c9a3cadca0a10b);
+            
+        
+
+        marker_3997a42eb3481839f9d164f539e397bf.bindPopup(popup_1555968714ef36fd1b93c9ea4885d22d)
+        ;
+
+        
+    
+    
+            marker_3997a42eb3481839f9d164f539e397bf.bindTooltip(
+                `<div>
+                     Sri Lanka
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_e946e5e6de7fd5727ffbd577c283dec3.addTo(map_8872a7e2a208a27a0f1288d420373915);
+        
+    
+            var feature_group_afe333bf2b8aa39a91c83e811f7f7101 = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_4c44a0cdd560a44bdd045338e2e4b61d = L.marker(
+                [8.538, -80.7821],
+                {}
+            ).addTo(feature_group_afe333bf2b8aa39a91c83e811f7f7101);
+        
+    
+            var icon_cd826e4313ba65923f730584952a5e8b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cloud", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_4c44a0cdd560a44bdd045338e2e4b61d.setIcon(icon_cd826e4313ba65923f730584952a5e8b);
+        
+    
+        var popup_3462c2505b01970831fe5abb7c2af03c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_1eef7ac60e9fdb88c10eeae1dd89793c = $(`<div id="html_1eef7ac60e9fdb88c10eeae1dd89793c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Isthmus of Panama</h3><p><b>Isthmus</b>: Narrow land bridge connecting North & South America.</p></div></div>`)[0];
+                popup_3462c2505b01970831fe5abb7c2af03c.setContent(html_1eef7ac60e9fdb88c10eeae1dd89793c);
+            
+        
+
+        marker_4c44a0cdd560a44bdd045338e2e4b61d.bindPopup(popup_3462c2505b01970831fe5abb7c2af03c)
+        ;
+
+        
+    
+    
+            marker_4c44a0cdd560a44bdd045338e2e4b61d.bindTooltip(
+                `<div>
+                     Isthmus of Panama
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_863f409a8ef9b1878f7b597dfa75ebd2 = L.marker(
+                [29.974, 32.5263],
+                {}
+            ).addTo(feature_group_afe333bf2b8aa39a91c83e811f7f7101);
+        
+    
+            var icon_3f78eded0ae97054b83f79021c56808b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cloud", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_863f409a8ef9b1878f7b597dfa75ebd2.setIcon(icon_3f78eded0ae97054b83f79021c56808b);
+        
+    
+        var popup_04fe198e854820a92cb65a94e214e3f9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_2818a1bfafb35b503e7421cc259f1a19 = $(`<div id="html_2818a1bfafb35b503e7421cc259f1a19" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Isthmus of Suez</h3><p><b>Isthmus</b>: Crucial land strip connecting Africa and Asia.</p></div></div>`)[0];
+                popup_04fe198e854820a92cb65a94e214e3f9.setContent(html_2818a1bfafb35b503e7421cc259f1a19);
+            
+        
+
+        marker_863f409a8ef9b1878f7b597dfa75ebd2.bindPopup(popup_04fe198e854820a92cb65a94e214e3f9)
+        ;
+
+        
+    
+    
+            marker_863f409a8ef9b1878f7b597dfa75ebd2.bindTooltip(
+                `<div>
+                     Isthmus of Suez
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_97cf98e640d234c2f10c2ee57651b6eb = L.marker(
+                [10.4, 98.8],
+                {}
+            ).addTo(feature_group_afe333bf2b8aa39a91c83e811f7f7101);
+        
+    
+            var icon_c96f11e33165dfa8fff8d2787a71c8ab = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cloud", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_97cf98e640d234c2f10c2ee57651b6eb.setIcon(icon_c96f11e33165dfa8fff8d2787a71c8ab);
+        
+    
+        var popup_b9d64045c0803c6310b2f6cbdd934b09 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_9d77acd1cedb6a14206ee017ba44323a = $(`<div id="html_9d77acd1cedb6a14206ee017ba44323a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Isthmus of Kra</h3><p><b>Isthmus</b>: Narrow land bridge in Thailand connecting the Malay Peninsula to mainland Asia.</p></div></div>`)[0];
+                popup_b9d64045c0803c6310b2f6cbdd934b09.setContent(html_9d77acd1cedb6a14206ee017ba44323a);
+            
+        
+
+        marker_97cf98e640d234c2f10c2ee57651b6eb.bindPopup(popup_b9d64045c0803c6310b2f6cbdd934b09)
+        ;
+
+        
+    
+    
+            marker_97cf98e640d234c2f10c2ee57651b6eb.bindTooltip(
+                `<div>
+                     Isthmus of Kra
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_f76c872653ff60249c72bf2264922c37 = L.marker(
+                [37.9131, 22.9936],
+                {}
+            ).addTo(feature_group_afe333bf2b8aa39a91c83e811f7f7101);
+        
+    
+            var icon_de6fc7943169bf90b48a100e9a4962ee = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "cloud", "iconColor": "white", "markerColor": "orange", "prefix": "glyphicon"}
+            );
+            marker_f76c872653ff60249c72bf2264922c37.setIcon(icon_de6fc7943169bf90b48a100e9a4962ee);
+        
+    
+        var popup_353cfb4d732258d1a14755baff2c56ed = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_c6fb5aec9c3ef74b7ec597e2ddc3519c = $(`<div id="html_c6fb5aec9c3ef74b7ec597e2ddc3519c" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Corinth Isthmus</h3><p><b>Isthmus</b>: Narrow strip of land connecting the Peloponnese peninsula to central Greece.</p></div></div>`)[0];
+                popup_353cfb4d732258d1a14755baff2c56ed.setContent(html_c6fb5aec9c3ef74b7ec597e2ddc3519c);
+            
+        
+
+        marker_f76c872653ff60249c72bf2264922c37.bindPopup(popup_353cfb4d732258d1a14755baff2c56ed)
+        ;
+
+        
+    
+    
+            marker_f76c872653ff60249c72bf2264922c37.bindTooltip(
+                `<div>
+                     Corinth Isthmus
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_afe333bf2b8aa39a91c83e811f7f7101.addTo(map_8872a7e2a208a27a0f1288d420373915);
+        
+    
+            var feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4 = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_453d838786db1d54c05798354a016ae3 = L.marker(
+                [27.6648, -81.5158],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_c53a515708d61657a39f9d2ed82b49dc = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_453d838786db1d54c05798354a016ae3.setIcon(icon_c53a515708d61657a39f9d2ed82b49dc);
+        
+    
+        var popup_4815db6b392fd30c0987bfafebfd365c = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_fd648c180066e142b76f7de78e0fe15a = $(`<div id="html_fd648c180066e142b76f7de78e0fe15a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Florida</h3><p><b>Peninsula</b>: Southeastern US peninsula between the Gulf & Atlantic.</p></div></div>`)[0];
+                popup_4815db6b392fd30c0987bfafebfd365c.setContent(html_fd648c180066e142b76f7de78e0fe15a);
+            
+        
+
+        marker_453d838786db1d54c05798354a016ae3.bindPopup(popup_4815db6b392fd30c0987bfafebfd365c)
+        ;
+
+        
+    
+    
+            marker_453d838786db1d54c05798354a016ae3.bindTooltip(
+                `<div>
+                     Florida
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e8fb32bf4ee3a913a3cc2f5c1db43f70 = L.marker(
+                [41.8719, 12.5674],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_20359434246d729a1801fc411851562b = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_e8fb32bf4ee3a913a3cc2f5c1db43f70.setIcon(icon_20359434246d729a1801fc411851562b);
+        
+    
+        var popup_d4e4cafa655543980624a6a2b8500a7b = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_44ab34ad9ccc1d647061b4131bc15a27 = $(`<div id="html_44ab34ad9ccc1d647061b4131bc15a27" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Italy</h3><p><b>Peninsula</b>: Boot-shaped peninsula jutting into the Mediterranean.</p></div></div>`)[0];
+                popup_d4e4cafa655543980624a6a2b8500a7b.setContent(html_44ab34ad9ccc1d647061b4131bc15a27);
+            
+        
+
+        marker_e8fb32bf4ee3a913a3cc2f5c1db43f70.bindPopup(popup_d4e4cafa655543980624a6a2b8500a7b)
+        ;
+
+        
+    
+    
+            marker_e8fb32bf4ee3a913a3cc2f5c1db43f70.bindTooltip(
+                `<div>
+                     Italy
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b0471d0179aa05c5c71b338198a1f4a1 = L.marker(
+                [20.5937, 78.9629],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_b62895006192ee53c06c254885b5450a = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_b0471d0179aa05c5c71b338198a1f4a1.setIcon(icon_b62895006192ee53c06c254885b5450a);
+        
+    
+        var popup_5e8d1df9990ecb361f07a7ef63fbf514 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5a276ec313412933bb724e6c4ea812c2 = $(`<div id="html_5a276ec313412933bb724e6c4ea812c2" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>India</h3><p><b>Peninsula</b>: Massive southern Asian subcontinent peninsula.</p></div></div>`)[0];
+                popup_5e8d1df9990ecb361f07a7ef63fbf514.setContent(html_5a276ec313412933bb724e6c4ea812c2);
+            
+        
+
+        marker_b0471d0179aa05c5c71b338198a1f4a1.bindPopup(popup_5e8d1df9990ecb361f07a7ef63fbf514)
+        ;
+
+        
+    
+    
+            marker_b0471d0179aa05c5c71b338198a1f4a1.bindTooltip(
+                `<div>
+                     India
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_b2158bf36cf4e18cc2f1129c3b9d8050 = L.marker(
+                [23.8859, 45.0792],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_9334f9bc020ad00f3e6c76253aa124e1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_b2158bf36cf4e18cc2f1129c3b9d8050.setIcon(icon_9334f9bc020ad00f3e6c76253aa124e1);
+        
+    
+        var popup_7cdc404364b98af8a969a8142a82bc18 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_d357186eec690774d2d015d4016c130b = $(`<div id="html_d357186eec690774d2d015d4016c130b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Arabian Peninsula</h3><p><b>Peninsula</b>: The world's largest peninsula, bounded by the Red Sea and Persian Gulf.</p></div></div>`)[0];
+                popup_7cdc404364b98af8a969a8142a82bc18.setContent(html_d357186eec690774d2d015d4016c130b);
+            
+        
+
+        marker_b2158bf36cf4e18cc2f1129c3b9d8050.bindPopup(popup_7cdc404364b98af8a969a8142a82bc18)
+        ;
+
+        
+    
+    
+            marker_b2158bf36cf4e18cc2f1129c3b9d8050.bindTooltip(
+                `<div>
+                     Arabian Peninsula
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5c86d010d8a0e55f86e4d6bf1768d72f = L.marker(
+                [40.4637, -3.7492],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_dbd3d3559c5ee721e66c2154c85a0630 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_5c86d010d8a0e55f86e4d6bf1768d72f.setIcon(icon_dbd3d3559c5ee721e66c2154c85a0630);
+        
+    
+        var popup_b2272646531db0c48474cff0057a6313 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_6d0342c9e3351045e48e39474c952a49 = $(`<div id="html_6d0342c9e3351045e48e39474c952a49" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Iberian Peninsula</h3><p><b>Peninsula</b>: European peninsula containing Spain and Portugal.</p></div></div>`)[0];
+                popup_b2272646531db0c48474cff0057a6313.setContent(html_6d0342c9e3351045e48e39474c952a49);
+            
+        
+
+        marker_5c86d010d8a0e55f86e4d6bf1768d72f.bindPopup(popup_b2272646531db0c48474cff0057a6313)
+        ;
+
+        
+    
+    
+            marker_5c86d010d8a0e55f86e4d6bf1768d72f.bindTooltip(
+                `<div>
+                     Iberian Peninsula
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_73d77eb193f378cb552b5f86a3a7381c = L.marker(
+                [36.5568, 127.9908],
+                {}
+            ).addTo(feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4);
+        
+    
+            var icon_98fae37dfcb2f26f7aeaa273b88ad57f = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "green", "prefix": "glyphicon"}
+            );
+            marker_73d77eb193f378cb552b5f86a3a7381c.setIcon(icon_98fae37dfcb2f26f7aeaa273b88ad57f);
+        
+    
+        var popup_812080a533ab11d6d804b691a12316d9 = L.popup({"maxWidth": 300});
+
+        
+            
+                var html_5696c194eec04d89af4c3e11dcc653c3 = $(`<div id="html_5696c194eec04d89af4c3e11dcc653c3" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial;'><h3>Korean Peninsula</h3><p><b>Peninsula</b>: East Asian peninsula bounded by the Yellow Sea and the Sea of Japan.</p></div></div>`)[0];
+                popup_812080a533ab11d6d804b691a12316d9.setContent(html_5696c194eec04d89af4c3e11dcc653c3);
+            
+        
+
+        marker_73d77eb193f378cb552b5f86a3a7381c.bindPopup(popup_812080a533ab11d6d804b691a12316d9)
+        ;
+
+        
+    
+    
+            marker_73d77eb193f378cb552b5f86a3a7381c.bindTooltip(
+                `<div>
+                     Korean Peninsula
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4.addTo(map_8872a7e2a208a27a0f1288d420373915);
+        
+    
+            var layer_control_b1285c05476f4e8f7c540ccfaec6c809_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_b1f89b8c21fa110cc36238c6f052d572,
+                },
+                overlays :  {
+                    "Islands (Red)" : feature_group_e946e5e6de7fd5727ffbd577c283dec3,
+                    "Isthmuses (Orange)" : feature_group_afe333bf2b8aa39a91c83e811f7f7101,
+                    "Peninsulas (Green)" : feature_group_e6ec91c6a8a251d4d5e5633dc1ae29e4,
+                },
+            };
+            let layer_control_b1285c05476f4e8f7c540ccfaec6c809 = L.control.layers(
+                layer_control_b1285c05476f4e8f7c540ccfaec6c809_layers.base_layers,
+                layer_control_b1285c05476f4e8f7c540ccfaec6c809_layers.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_8872a7e2a208a27a0f1288d420373915);
+
+        
+</script>
+</html>

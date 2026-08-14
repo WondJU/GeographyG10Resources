@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_ea60ee89d1f03286e8a686c0ba2722c5 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+<div style="position: fixed; top: 10px; left: 50px; z-index: 9999; background: white; padding: 10px; border-radius: 5px; border: 1px solid #ccc; max-height: 400px; overflow-y: auto;">
+    <label for="flyto" style="font-weight: bold; font-family: Arial; font-size: 13px;">Fly to Location: </label>
+    <select id="flyto" onchange="window.map_instance.flyTo(this.value.split(','), this.options[this.selectedIndex].getAttribute('data-zoom'));" style="padding: 5px; font-family: Arial;">
+        <option value="20,30" data-zoom="3">Global View</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Mountains ---</option>
+        <option value="31.0667,-7.9167" data-zoom="3.5">Atlas Mountains</option>
+        <option value="6.9305,39.7006" data-zoom="6">Bale Mountains</option>
+        <option value="-29.0,29.0" data-zoom="3.5">Drakensberg Range</option>
+        <option value="-32.6532,-70.0108" data-zoom="5">Mount Aconcagua (Andes)</option>
+        <option value="27.9881,86.925" data-zoom="5">Mount Everest</option>
+        <option value="-3.0674,37.3556" data-zoom="5">Mount Kilimanjaro</option>
+        <option value="13.25,38.1667" data-zoom="6">Semien Mountains</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Plains ---</option>
+        <option value="48.0,70.0" data-zoom="3.5">Eurasian Steppe</option>
+        <option value="27.0,80.0" data-zoom="3.5">Indo-Gangetic Plain</option>
+        <option value="45.0,-100.0" data-zoom="3.5">The Great Plains</option>
+        <option disabled style="background-color: #eee; font-weight: bold;">--- Plateaus ---</option>
+        <option value="36.5,-111.0" data-zoom="5">Colorado Plateau</option>
+        <option value="17.0,77.0" data-zoom="5">Deccan Plateau</option>
+        <option value="32.0,89.0" data-zoom="3.5">Tibetan Plateau</option>
+
+    </select>
+</div>
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var maps = Object.keys(window).filter(k => k.startsWith('map_'));
+        if(maps.length > 0) { window.map_instance = window[maps]; }
+    });
+</script>
+    
+            <div class="folium-map" id="map_ea60ee89d1f03286e8a686c0ba2722c5" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_ea60ee89d1f03286e8a686c0ba2722c5 = L.map(
+                "map_ea60ee89d1f03286e8a686c0ba2722c5",
+                {
+                    center: [20.0, 30.0],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 3,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_8c8cf77d168be29eeafe4da5211aa734 = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+                {"attribution": "Map data: \u0026copy; \u003ca href=\"https://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e contributors, \u003ca href=\"http://viewfinderpanoramas.org\"\u003eSRTM\u003c/a\u003e | Map style: \u0026copy; \u003ca href=\"https://opentopomap.org\"\u003eOpenTopoMap\u003c/a\u003e (\u003ca href=\"https://creativecommons.org\"\u003eCC-BY-SA\u003c/a\u003e)", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_8c8cf77d168be29eeafe4da5211aa734.addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+        
+    
+            var tile_layer_302eb53cfacc140e810eb1a9b59c7ff7 = L.tileLayer(
+                "https://arcgisonline.com{z}/{y}/{x}",
+                {"attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri", "detectRetina": false, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            );
+        
+    
+            tile_layer_302eb53cfacc140e810eb1a9b59c7ff7.addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+        
+    
+            var feature_group_83ee963ae0687e9426db785de3dc442a = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_e4bc5035e02cf125727ac5288e2d590a = L.marker(
+                [27.9881, 86.925],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_81a0db42ad79c63c5552bac672cc2172 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_e4bc5035e02cf125727ac5288e2d590a.setIcon(icon_81a0db42ad79c63c5552bac672cc2172);
+        
+    
+        var popup_749872916ab5aa7be804877f64a191d8 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_1784cd81d21dc52df7bd832ce5db12b6 = $(`<div id="html_1784cd81d21dc52df7bd832ce5db12b6" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Mount Everest</h3><p><b>Elevation: 8,848m</b><br>The highest peak on Earth, located in the towering Himalayan range.</p></div></div>`)[0];
+                popup_749872916ab5aa7be804877f64a191d8.setContent(html_1784cd81d21dc52df7bd832ce5db12b6);
+            
+        
+
+        marker_e4bc5035e02cf125727ac5288e2d590a.bindPopup(popup_749872916ab5aa7be804877f64a191d8)
+        ;
+
+        
+    
+    
+            marker_e4bc5035e02cf125727ac5288e2d590a.bindTooltip(
+                `<div>
+                     Mount Everest
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_a58b65f317defd2412feb68899a2948b = L.marker(
+                [-3.0674, 37.3556],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_a6e453555e346410340756e45208e9c8 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_a58b65f317defd2412feb68899a2948b.setIcon(icon_a6e453555e346410340756e45208e9c8);
+        
+    
+        var popup_1ac6572fbe74427c68c76a869bb7c3b5 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_2117cef37120366a411944c6cca5aeb5 = $(`<div id="html_2117cef37120366a411944c6cca5aeb5" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Mount Kilimanjaro</h3><p><b>Elevation: 5,895m</b><br>The tallest free-standing volcanic mountain in the world, located in Tanzania.</p></div></div>`)[0];
+                popup_1ac6572fbe74427c68c76a869bb7c3b5.setContent(html_2117cef37120366a411944c6cca5aeb5);
+            
+        
+
+        marker_a58b65f317defd2412feb68899a2948b.bindPopup(popup_1ac6572fbe74427c68c76a869bb7c3b5)
+        ;
+
+        
+    
+    
+            marker_a58b65f317defd2412feb68899a2948b.bindTooltip(
+                `<div>
+                     Mount Kilimanjaro
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_e272a668f00892d76e38c8dc7fb1b72d = L.marker(
+                [-32.6532, -70.0108],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_a27ec21105e9d0e5dd732dd0608fd4ad = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_e272a668f00892d76e38c8dc7fb1b72d.setIcon(icon_a27ec21105e9d0e5dd732dd0608fd4ad);
+        
+    
+        var popup_a378eab09de7a17a6ae661c081e9538a = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_6f5b5f4e7c1234345307cb7f099417db = $(`<div id="html_6f5b5f4e7c1234345307cb7f099417db" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Mount Aconcagua (Andes)</h3><p><b>Elevation: 6,961m</b><br>The highest peak in both the Western and Southern Hemispheres, located in the Andes Range.</p></div></div>`)[0];
+                popup_a378eab09de7a17a6ae661c081e9538a.setContent(html_6f5b5f4e7c1234345307cb7f099417db);
+            
+        
+
+        marker_e272a668f00892d76e38c8dc7fb1b72d.bindPopup(popup_a378eab09de7a17a6ae661c081e9538a)
+        ;
+
+        
+    
+    
+            marker_e272a668f00892d76e38c8dc7fb1b72d.bindTooltip(
+                `<div>
+                     Mount Aconcagua (Andes)
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_7022ebbf4ae0a15e529d69d21d40b060 = L.marker(
+                [31.0667, -7.9167],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_2b78d6f489417c216c4032614744cb62 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_7022ebbf4ae0a15e529d69d21d40b060.setIcon(icon_2b78d6f489417c216c4032614744cb62);
+        
+    
+        var popup_d29ce5122a1d96bf457ad098550895df = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_631a80d9a04b953122c58b1dcbc37579 = $(`<div id="html_631a80d9a04b953122c58b1dcbc37579" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Atlas Mountains</h3><p><b>Elevation: 4,167m (Toubkal)</b><br>A mountain range stretching across northwestern Africa, separating the coastlines from the Sahara Desert.</p></div></div>`)[0];
+                popup_d29ce5122a1d96bf457ad098550895df.setContent(html_631a80d9a04b953122c58b1dcbc37579);
+            
+        
+
+        marker_7022ebbf4ae0a15e529d69d21d40b060.bindPopup(popup_d29ce5122a1d96bf457ad098550895df)
+        ;
+
+        
+    
+    
+            marker_7022ebbf4ae0a15e529d69d21d40b060.bindTooltip(
+                `<div>
+                     Atlas Mountains
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_89fdd03632b51a5d347758ad8bb96274 = L.marker(
+                [-29.0, 29.0],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_95535dcc266ee12da5329e82d1ef040c = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_89fdd03632b51a5d347758ad8bb96274.setIcon(icon_95535dcc266ee12da5329e82d1ef040c);
+        
+    
+        var popup_69c711d9a8ec0be62635b80940aaa662 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_766b1ba858675f0fce7ab3b7ef9dc747 = $(`<div id="html_766b1ba858675f0fce7ab3b7ef9dc747" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Drakensberg Range</h3><p><b>Elevation: 3,482m</b><br>The main mountain range of Southern Africa, forming a massive rock escarpment.</p></div></div>`)[0];
+                popup_69c711d9a8ec0be62635b80940aaa662.setContent(html_766b1ba858675f0fce7ab3b7ef9dc747);
+            
+        
+
+        marker_89fdd03632b51a5d347758ad8bb96274.bindPopup(popup_69c711d9a8ec0be62635b80940aaa662)
+        ;
+
+        
+    
+    
+            marker_89fdd03632b51a5d347758ad8bb96274.bindTooltip(
+                `<div>
+                     Drakensberg Range
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_809980185cb5a4c54df0ab5adbb5628b = L.marker(
+                [13.25, 38.1667],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_92dc7480629c89a8a7a46189612320f9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_809980185cb5a4c54df0ab5adbb5628b.setIcon(icon_92dc7480629c89a8a7a46189612320f9);
+        
+    
+        var popup_fce03de30dacafa9f51db872c27f7cf2 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_ce7468a59e814c07ce489a2ac70a74cc = $(`<div id="html_ce7468a59e814c07ce489a2ac70a74cc" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Semien Mountains</h3><p><b>Elevation: 4,620m (Ras Dashen)</b><br>Located in northern Ethiopia, these spectacular basaltic cliffs host unique alpine biomes.</p></div></div>`)[0];
+                popup_fce03de30dacafa9f51db872c27f7cf2.setContent(html_ce7468a59e814c07ce489a2ac70a74cc);
+            
+        
+
+        marker_809980185cb5a4c54df0ab5adbb5628b.bindPopup(popup_fce03de30dacafa9f51db872c27f7cf2)
+        ;
+
+        
+    
+    
+            marker_809980185cb5a4c54df0ab5adbb5628b.bindTooltip(
+                `<div>
+                     Semien Mountains
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_9df04a0d24c4bec9765e91b96670e65d = L.marker(
+                [6.9305, 39.7006],
+                {}
+            ).addTo(feature_group_83ee963ae0687e9426db785de3dc442a);
+        
+    
+            var icon_baafdfa4a87ef635fe0fef6dc0ccd3ee = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "star", "iconColor": "white", "markerColor": "purple", "prefix": "glyphicon"}
+            );
+            marker_9df04a0d24c4bec9765e91b96670e65d.setIcon(icon_baafdfa4a87ef635fe0fef6dc0ccd3ee);
+        
+    
+        var popup_a4dcfff8532e06aabf37e6e2229828cb = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_0b5798554b690cbabd660c2bc8992d0b = $(`<div id="html_0b5798554b690cbabd660c2bc8992d0b" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Bale Mountains</h3><p><b>Elevation: 4,377m (Tullu Dimtu)</b><br>Located in southeastern Ethiopia, this range contains Africa's largest Afro-alpine habitat.</p></div></div>`)[0];
+                popup_a4dcfff8532e06aabf37e6e2229828cb.setContent(html_0b5798554b690cbabd660c2bc8992d0b);
+            
+        
+
+        marker_9df04a0d24c4bec9765e91b96670e65d.bindPopup(popup_a4dcfff8532e06aabf37e6e2229828cb)
+        ;
+
+        
+    
+    
+            marker_9df04a0d24c4bec9765e91b96670e65d.bindTooltip(
+                `<div>
+                     Bale Mountains
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_83ee963ae0687e9426db785de3dc442a.addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+        
+    
+            var feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_cbf28030e856bd3ed393ca6c4054d180 = L.marker(
+                [32.0, 89.0],
+                {}
+            ).addTo(feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd);
+        
+    
+            var icon_e0d81328bb748e25088fdc6b40945857 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bookmark", "iconColor": "white", "markerColor": "darkred", "prefix": "glyphicon"}
+            );
+            marker_cbf28030e856bd3ed393ca6c4054d180.setIcon(icon_e0d81328bb748e25088fdc6b40945857);
+        
+    
+        var popup_cca6000bbbd4df725cbfae7967221788 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_d37c25d956836861da0c398c9fe3dbed = $(`<div id="html_d37c25d956836861da0c398c9fe3dbed" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Tibetan Plateau</h3><p><b>Avg Elevation: 4,500m</b><br>Known as the 'Roof of the World', it is the highest and largest plateau on Earth.</p></div></div>`)[0];
+                popup_cca6000bbbd4df725cbfae7967221788.setContent(html_d37c25d956836861da0c398c9fe3dbed);
+            
+        
+
+        marker_cbf28030e856bd3ed393ca6c4054d180.bindPopup(popup_cca6000bbbd4df725cbfae7967221788)
+        ;
+
+        
+    
+    
+            marker_cbf28030e856bd3ed393ca6c4054d180.bindTooltip(
+                `<div>
+                     Tibetan Plateau
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_3751a78723ca8f756ef1bde6ae13f3d6 = L.marker(
+                [17.0, 77.0],
+                {}
+            ).addTo(feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd);
+        
+    
+            var icon_43a158fd1d12de82a524c9a44564b7d2 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bookmark", "iconColor": "white", "markerColor": "darkred", "prefix": "glyphicon"}
+            );
+            marker_3751a78723ca8f756ef1bde6ae13f3d6.setIcon(icon_43a158fd1d12de82a524c9a44564b7d2);
+        
+    
+        var popup_7b2e213c2fcbe4be1308108ab4bb5afb = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_4c7307fd554333e191b1bf3edc5a9af9 = $(`<div id="html_4c7307fd554333e191b1bf3edc5a9af9" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Deccan Plateau</h3><p><b>Avg Elevation: 600m</b><br>A massive triangular basaltic plateau covering most of southern India.</p></div></div>`)[0];
+                popup_7b2e213c2fcbe4be1308108ab4bb5afb.setContent(html_4c7307fd554333e191b1bf3edc5a9af9);
+            
+        
+
+        marker_3751a78723ca8f756ef1bde6ae13f3d6.bindPopup(popup_7b2e213c2fcbe4be1308108ab4bb5afb)
+        ;
+
+        
+    
+    
+            marker_3751a78723ca8f756ef1bde6ae13f3d6.bindTooltip(
+                `<div>
+                     Deccan Plateau
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_5a98e2cdc15ae8b2eb10c0f6a7095578 = L.marker(
+                [36.5, -111.0],
+                {}
+            ).addTo(feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd);
+        
+    
+            var icon_88bd938b9bfe94d147e4f1ed5bab83ab = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "bookmark", "iconColor": "white", "markerColor": "darkred", "prefix": "glyphicon"}
+            );
+            marker_5a98e2cdc15ae8b2eb10c0f6a7095578.setIcon(icon_88bd938b9bfe94d147e4f1ed5bab83ab);
+        
+    
+        var popup_ab6cfeedde87820eb9ac8c2b2aac2320 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_1ac42b2f6994fd29f4eb18967adcf63a = $(`<div id="html_1ac42b2f6994fd29f4eb18967adcf63a" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Colorado Plateau</h3><p><b>Avg Elevation: 1,500m</b><br>A vast, elevated tableland in the southwestern US, famous for the Grand Canyon.</p></div></div>`)[0];
+                popup_ab6cfeedde87820eb9ac8c2b2aac2320.setContent(html_1ac42b2f6994fd29f4eb18967adcf63a);
+            
+        
+
+        marker_5a98e2cdc15ae8b2eb10c0f6a7095578.bindPopup(popup_ab6cfeedde87820eb9ac8c2b2aac2320)
+        ;
+
+        
+    
+    
+            marker_5a98e2cdc15ae8b2eb10c0f6a7095578.bindTooltip(
+                `<div>
+                     Colorado Plateau
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd.addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+        
+    
+            var feature_group_30d578755b7a348297f83801af928ac7 = L.featureGroup(
+                {}
+            );
+        
+    
+            var marker_86cc7de3697aa536c2b76666f6e1f69e = L.marker(
+                [45.0, -100.0],
+                {}
+            ).addTo(feature_group_30d578755b7a348297f83801af928ac7);
+        
+    
+            var icon_72dd86c480799d703bb363843b95e0d9 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "leaf", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_86cc7de3697aa536c2b76666f6e1f69e.setIcon(icon_72dd86c480799d703bb363843b95e0d9);
+        
+    
+        var popup_664ff3995bd25f32f970b4e991f67528 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_4fb869c0b56100480c848e28a91fab0d = $(`<div id="html_4fb869c0b56100480c848e28a91fab0d" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>The Great Plains</h3><p><b>Agricultural Significance</b><br>A huge expanse of flat grassland spreading across the central US and Canada.</p></div></div>`)[0];
+                popup_664ff3995bd25f32f970b4e991f67528.setContent(html_4fb869c0b56100480c848e28a91fab0d);
+            
+        
+
+        marker_86cc7de3697aa536c2b76666f6e1f69e.bindPopup(popup_664ff3995bd25f32f970b4e991f67528)
+        ;
+
+        
+    
+    
+            marker_86cc7de3697aa536c2b76666f6e1f69e.bindTooltip(
+                `<div>
+                     The Great Plains
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_2d22b0717e3e9655c9efc427d1b36771 = L.marker(
+                [27.0, 80.0],
+                {}
+            ).addTo(feature_group_30d578755b7a348297f83801af928ac7);
+        
+    
+            var icon_9747748221ca16600713ee449436e065 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "leaf", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_2d22b0717e3e9655c9efc427d1b36771.setIcon(icon_9747748221ca16600713ee449436e065);
+        
+    
+        var popup_957bc5344ed05034cbf832fa792336d0 = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_964f78ac248085be3829c04a11e34584 = $(`<div id="html_964f78ac248085be3829c04a11e34584" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Indo-Gangetic Plain</h3><p><b>Agricultural Significance</b><br>A highly fertile lowland plain formed by the Indus and Ganges rivers.</p></div></div>`)[0];
+                popup_957bc5344ed05034cbf832fa792336d0.setContent(html_964f78ac248085be3829c04a11e34584);
+            
+        
+
+        marker_2d22b0717e3e9655c9efc427d1b36771.bindPopup(popup_957bc5344ed05034cbf832fa792336d0)
+        ;
+
+        
+    
+    
+            marker_2d22b0717e3e9655c9efc427d1b36771.bindTooltip(
+                `<div>
+                     Indo-Gangetic Plain
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var marker_6879c8ddecb54501a5d5be1084f071d4 = L.marker(
+                [48.0, 70.0],
+                {}
+            ).addTo(feature_group_30d578755b7a348297f83801af928ac7);
+        
+    
+            var icon_d94f21e759c2fb8b5d4bcabf9d415cb1 = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "leaf", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_6879c8ddecb54501a5d5be1084f071d4.setIcon(icon_d94f21e759c2fb8b5d4bcabf9d415cb1);
+        
+    
+        var popup_c6d6b1f7b6a825a76e5d205ef2e612ec = L.popup({"maxWidth": 320});
+
+        
+            
+                var html_d27adcb0235f6149a8319bd4231b6ad7 = $(`<div id="html_d27adcb0235f6149a8319bd4231b6ad7" style="width: 100.0%; height: 100.0%;"><div style='font-family: Arial; min-width: 200px;'><h3>Eurasian Steppe</h3><p><b>Agricultural Significance</b><br>A massive, continuous belt of flat grassland stretching from eastern Europe to northern Asia.</p></div></div>`)[0];
+                popup_c6d6b1f7b6a825a76e5d205ef2e612ec.setContent(html_d27adcb0235f6149a8319bd4231b6ad7);
+            
+        
+
+        marker_6879c8ddecb54501a5d5be1084f071d4.bindPopup(popup_c6d6b1f7b6a825a76e5d205ef2e612ec)
+        ;
+
+        
+    
+    
+            marker_6879c8ddecb54501a5d5be1084f071d4.bindTooltip(
+                `<div>
+                     Eurasian Steppe
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            feature_group_30d578755b7a348297f83801af928ac7.addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+        
+    
+            var layer_control_1de1e01bebc3bd937d096461dce1e6ce_layers = {
+                base_layers : {
+                    "Topographic Map (Contours)" : tile_layer_8c8cf77d168be29eeafe4da5211aa734,
+                    "Shaded Relief Terrain" : tile_layer_302eb53cfacc140e810eb1a9b59c7ff7,
+                },
+                overlays :  {
+                    "Mountains (Purple)" : feature_group_83ee963ae0687e9426db785de3dc442a,
+                    "Plateaus (Dark Red)" : feature_group_c19b2d3f52a1e84332ee8ec3ab5c76dd,
+                    "Plains (Blue)" : feature_group_30d578755b7a348297f83801af928ac7,
+                },
+            };
+            let layer_control_1de1e01bebc3bd937d096461dce1e6ce = L.control.layers(
+                layer_control_1de1e01bebc3bd937d096461dce1e6ce_layers.base_layers,
+                layer_control_1de1e01bebc3bd937d096461dce1e6ce_layers.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_ea60ee89d1f03286e8a686c0ba2722c5);
+
+        
+</script>
+</html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activity: Continent Size Ranking</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --success: #16a34a;
+      --error: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg);
+      color: #1e293b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+      color: #0f172a;
+    }
+
+    p.instructions {
+      text-align: center;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    /* Map Display Area */
+    .map-wrapper {
+      position: relative;
+      width: 100%;
+      background-color: #dbeafe;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    svg.world-map {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .continent-shape {
+      fill: #94a3b8;
+      stroke: #ffffff;
+      stroke-width: 1;
+      stroke-linejoin: round;
+      transition: fill 0.3s;
+    }
+
+    .continent-label {
+      font-size: 11px;
+      font-weight: bold;
+      fill: #0f172a;
+      text-anchor: middle;
+      dominant-baseline: central;
+      pointer-events: none;
+    }
+
+    /* Activity Layout Grid */
+    .activity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .activity-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section-box {
+      background: #f1f5f9;
+      padding: 16px;
+      border-radius: 8px;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Draggables */
+    .labels-bank {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .draggable-label {
+      background: var(--primary);
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: grab;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .draggable-label:active {
+      cursor: grabbing;
+      transform: scale(1.02);
+    }
+
+    .draggable-label.selected {
+      outline: 3px solid #f59e0b;
+    }
+
+    .draggable-label.placed {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Target Drop Slots */
+    .rank-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .rank-slot {
+      background: #ffffff;
+      border: 2px dashed #cbd5e1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .rank-slot.drag-over {
+      background: #fef08a;
+      border-color: #d97706;
+    }
+
+    .rank-badge {
+      background: #e2e8f0;
+      color: #334155;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-right: 12px;
+      min-width: 85px;
+      text-align: center;
+    }
+
+    .slot-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #64748b;
+      flex-grow: 1;
+    }
+
+    .rank-slot.correct {
+      background: #dcfce7;
+      border: 2px solid var(--success);
+    }
+
+    .rank-slot.correct .slot-text {
+      color: #15803d;
+    }
+
+    .rank-slot.incorrect {
+      background: #fee2e2;
+      border: 2px solid var(--error);
+    }
+
+    /* Controls & Feedback */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .feedback {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .feedback.success { color: var(--success); }
+    .feedback.error { color: var(--error); }
+
+    button.reset-btn {
+      background: #64748b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button.reset-btn:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>📐 Activity: Rank Continents by Size</h1>
+  <p class="instructions">Drag each continent to its correct rank slot based on land area (1st = Largest, 7th = Smallest), or click a continent and then click its target rank slot.</p>
+
+  <!-- Reference Map -->
+  <div class="map-wrapper">
+    <svg viewBox="0 0 1000 500" class="world-map">
+      <g class="continents-layer">
+        <!-- North America -->
+        <path class="continent-shape" d="M 120,40 L 170,30 L 260,35 L 310,60 L 300,100 L 260,110 L 280,140 L 230,190 L 210,240 L 190,260 L 170,230 L 180,180 L 140,170 L 100,130 L 70,110 L 60,70 L 90,50 Z M 220,70 L 240,60 L 250,75 Z M 160,25 L 200,20 L 210,35 L 170,35 Z"/>
+        <text class="continent-label" x="180" y="130">North America</text>
+        
+        <!-- South America -->
+        <path class="continent-shape" d="M 215,265 L 255,270 L 305,300 L 330,340 L 300,380 L 270,440 L 245,470 L 235,460 L 245,390 L 230,340 L 215,300 Z"/>
+        <text class="continent-label" x="265" y="350">South America</text>
+
+        <!-- Europe -->
+        <path class="continent-shape" d="M 450,60 L 490,55 L 530,65 L 560,95 L 540,135 L 480,145 L 450,130 L 440,95 L 460,80 Z M 430,70 L 445,60 L 440,85 Z M 465,40 L 485,35 L 490,50 Z"/>
+        <text class="continent-label" x="490" y="100">Europe</text>
+
+        <!-- Africa -->
+        <path class="continent-shape" d="M 435,145 L 500,140 L 550,175 L 575,200 L 540,240 L 515,310 L 490,370 L 465,360 L 440,280 L 415,230 L 400,180 L 420,155 Z M 565,310 L 575,315 L 570,350 L 560,340 Z"/>
+        <text class="continent-label" x="480" y="240">Africa</text>
+
+        <!-- Asia -->
+        <path class="continent-shape" d="M 565,90 L 630,50 L 730,45 L 850,55 L 900,100 L 870,160 L 810,180 L 780,240 L 740,270 L 710,250 L 690,210 L 630,220 L 590,180 L 585,130 Z M 770,275 L 785,280 L 775,300 L 760,290 Z M 800,285 L 820,290 L 810,315 Z"/>
+        <text class="continent-label" x="710" y="130">Asia</text>
+
+        <!-- Oceania -->
+        <path class="continent-shape" d="M 750,330 L 820,320 L 870,345 L 860,400 L 810,420 L 750,400 L 735,360 Z M 865,425 L 875,430 L 865,445 Z M 795,300 L 830,305 L 820,315 Z"/>
+        <text class="continent-label" x="800" y="370">Oceania</text>
+
+        <!-- Antarctica -->
+        <path class="continent-shape" d="M 120,480 L 250,465 L 450,460 L 650,465 L 880,480 L 920,495 L 80,495 Z"/>
+        <text class="continent-label" x="500" y="480">Antarctica</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Interactive Activity Section -->
+  <div class="activity-grid">
+    <!-- Unordered Continents Bank -->
+    <div class="section-box">
+      <div class="section-title">Continents (Unordered)</div>
+      <div class="labels-bank" id="labelsBank">
+        <div class="draggable-label" draggable="true" data-continent="Europe">Europe <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="Asia">Asia <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="Antarctica">Antarctica <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="Africa">Africa <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="Oceania">Oceania / Australia <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="South America">South America <span>💬</span></div>
+        <div class="draggable-label" draggable="true" data-continent="North America">North America <span>💬</span></div>
+      </div>
+    </div>
+
+    <!-- Target Rank Slots -->
+    <div class="section-box">
+      <div class="section-title">Size Ranking Target Slots</div>
+      <div class="rank-slots">
+        <div class="rank-slot" data-rank="1" data-correct="Asia">
+          <span class="rank-badge">1st (Largest)</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="2" data-correct="Africa">
+          <span class="rank-badge">2nd</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="3" data-correct="North America">
+          <span class="rank-badge">3rd</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="4" data-correct="South America">
+          <span class="rank-badge">4th</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="5" data-correct="Antarctica">
+          <span class="rank-badge">5th</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="6" data-correct="Europe">
+          <span class="rank-badge">6th</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+        <div class="rank-slot" data-rank="7" data-correct="Oceania">
+          <span class="rank-badge">7th (Smallest)</span>
+          <span class="slot-text">Drop continent here</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer controls -->
+  <div class="controls">
+    <div class="feedback" id="feedback"></div>
+    <button class="reset-btn" onclick="resetActivity()">Reset Activity</button>
+  </div>
+</div>
+
+<script>
+  let draggedContinent = null;
+  let selectedElement = null;
+  let correctCount = 0;
+  const totalRanks = 7;
+
+  const draggables = document.querySelectorAll('.draggable-label');
+  const rankSlots = document.querySelectorAll('.rank-slot');
+  const feedbackEl = document.getElementById('feedback');
+
+  draggables.forEach(draggable => {
+    draggable.addEventListener('dragstart', (e) => {
+      if (draggable.classList.contains('placed')) return;
+      draggedContinent = draggable.getAttribute('data-continent');
+      e.dataTransfer.setData('text/plain', draggedContinent);
+    });
+
+    draggable.addEventListener('click', () => {
+      if (draggable.classList.contains('placed')) return;
+      draggables.forEach(d => d.classList.remove('selected'));
+      draggable.classList.add('selected');
+      selectedElement = draggable;
+      draggedContinent = draggable.getAttribute('data-continent');
+    });
+  });
+
+  rankSlots.forEach(slot => {
+    slot.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      slot.classList.add('drag-over');
+    });
+
+    slot.addEventListener('dragleave', () => {
+      slot.classList.remove('drag-over');
+    });
+
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      const continent = e.dataTransfer.getData('text/plain') || draggedContinent;
+      handlePlacement(slot, continent);
+    });
+
+    slot.addEventListener('click', () => {
+      if (selectedElement) {
+        handlePlacement(slot, draggedContinent);
+      }
+    });
+  });
+
+  function handlePlacement(slot, continentName) {
+    if (!continentName || slot.classList.contains('correct')) return;
+
+    const correctContinent = slot.getAttribute('data-correct');
+    const matchingDraggable = Array.from(draggables).find(
+      d => d.getAttribute('data-continent') === continentName
+    );
+
+    if (correctContinent === continentName) {
+      slot.classList.add('correct');
+      slot.querySelector('.slot-text').textContent = continentName + " ✔";
+      if (matchingDraggable) {
+        matchingDraggable.classList.add('placed');
+        matchingDraggable.classList.remove('selected');
+        matchingDraggable.setAttribute('draggable', 'false');
+      }
+      correctCount++;
+      showFeedback('Correct size rank!', 'success');
+
+      if (correctCount === totalRanks) {
+        showFeedback('🎉 Fantastic! You correctly ranked all 7 continents by area size!', 'success');
+      }
+    } else {
+      slot.classList.add('incorrect');
+      showFeedback('Not quite the right rank for ' + continentName + '. Try another slot!', 'error');
+      setTimeout(() => slot.classList.remove('incorrect'), 1200);
+    }
+
+    selectedElement = null;
+    draggedContinent = null;
+  }
+
+  function showFeedback(msg, type) {
+    feedbackEl.textContent = msg;
+    feedbackEl.className = `feedback ${type}`;
+  }
+
+  function resetActivity() {
+    correctCount = 0;
+    feedbackEl.textContent = '';
+    draggables.forEach(d => {
+      d.classList.remove('placed', 'selected');
+      d.setAttribute('draggable', 'true');
+    });
+    rankSlots.forEach(slot => {
+      slot.classList.remove('correct', 'incorrect', 'drag-over');
+      slot.querySelector('.slot-text').textContent = 'Drop continent here';
+    });
+  }
+</script>
+
+</body>
+</html>
